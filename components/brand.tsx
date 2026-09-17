@@ -23,7 +23,6 @@ export function Footer() {
   return (
     <footer>
       <img src="/brand/nikon.svg" alt="Nikon" />
-      <p>En el corazón de la imagen.</p>
       <span>© 2026 Nikon Perú · Foto Image</span>
     </footer>
   );

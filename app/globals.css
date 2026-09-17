@@ -355,11 +355,6 @@ footer {
   border-top: 1px solid var(--line);
   background: #fff;
 }
-footer p {
-  font-size: 14px;
-  color: var(--muted);
-  margin: 0;
-}
 footer > span {
   margin-left: auto;
   font-size: 12px;
