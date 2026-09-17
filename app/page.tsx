@@ -6,7 +6,6 @@ import { useRegistration, setRegistration } from '@/lib/registration';
 import { ArrowRight, Check, CalendarDays, MapPin } from 'lucide-react';
 import { Header, Footer } from '@/components/brand';
 import { eventDays } from '@/lib/event';
-import { galleryUrl } from '@/lib/gallery-url';
 import { galleries } from './gallery-data';
 export default function Home() {
   const registered = useRegistration() === 'registered';
@@ -101,10 +100,10 @@ export default function Home() {
               <p className="eyebrow">Registro completo</p>
               <h2>¡Gracias!</h2>
               <p>
-                Ya puedes entrar a las galerías y descargar tus fotografías.
+                Te avisaremos cuando las fotografías estén disponibles.
               </p>
               <a className="primary-button" href="#galerias">
-                Ver mis fotos <ArrowRight size={18} />
+                Ver jornadas <ArrowRight size={18} />
               </a>
               <button
                 className="text-button"
@@ -214,37 +213,43 @@ export default function Home() {
             <p>Selecciona el día en que te fotografiamos.</p>
           </div>
           <div className="day-grid">
-            {eventDays.map((day) => (
-              <Link
-                className="day-card"
-                href={'/' + day.slug}
-                key={day.slug}
-                aria-label={day.day + ' ' + day.date + '. Ver galería'}
-              >
-                <div className="day-image">
-                  <img
-                    src={
-                      galleries[day.slug][0]
-                        ? galleryUrl(galleries[day.slug][0].thumb)
-                        : day.cover
-                    }
-                    alt=""
-                  />
-                  <span className="photo-count">
-                    {galleries[day.slug].length
-                      ? galleries[day.slug].length + ' fotos'
-                      : 'Próximamente'}
-                  </span>
+            {eventDays.map((day) => {
+              const hasPhotos = galleries[day.slug].length > 0;
+              const content = (
+                <>
+                  <div className="day-image">
+                    <img src={day.cover} alt="" />
+                    <span className="photo-count">
+                      {hasPhotos
+                        ? galleries[day.slug].length + ' fotos'
+                        : 'Próximamente'}
+                    </span>
+                  </div>
+                  <div className="day-caption">
+                    <small>{day.date}</small>
+                    <h3>{day.day}</h3>
+                    <span>
+                      {hasPhotos ? 'Ver jornada' : 'Galería no disponible'}
+                      {hasPhotos && <ArrowRight size={18} />}
+                    </span>
+                  </div>
+                </>
+              );
+              return hasPhotos ? (
+                <Link
+                  className="day-card"
+                  href={'/' + day.slug}
+                  key={day.slug}
+                  aria-label={day.day + ' ' + day.date + '. Ver galería'}
+                >
+                  {content}
+                </Link>
+              ) : (
+                <div className="day-card day-card--pending" key={day.slug}>
+                  {content}
                 </div>
-                <div className="day-caption">
-                  <small>{day.date}</small>
-                  <h3>{day.day}</h3>
-                  <span>
-                    Ver jornada <ArrowRight size={18} />
-                  </span>
-                </div>
-              </Link>
-            ))}
+              );
+            })}
           </div>
         </section>
       )}

@@ -305,7 +305,7 @@ input:focus {
   background: #fff;
   transition: transform 0.2s;
 }
-.day-card:hover {
+.day-card:not(.day-card--pending):hover {
   transform: translateY(-4px);
 }
 .day-image {
@@ -385,19 +385,6 @@ footer > span {
   padding: 8px 12px;
   background: #fff8cc;
   font-size: 13px;
-}
-.sample-notice {
-  margin: 0 clamp(24px, 7vw, 110px) 32px;
-  border-left: 3px solid var(--nikon);
-  padding: 8px 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  font-size: 14px;
-}
-.sample-notice span {
-  color: var(--muted);
-  line-height: 1.6;
 }
 .photo-grid {
   display: grid;

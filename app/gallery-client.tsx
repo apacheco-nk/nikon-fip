@@ -8,17 +8,6 @@ import { eventDays, type EventDay } from '@/lib/event';
 import { galleries, type GalleryPhoto } from './gallery-data';
 import { galleryUrl } from '@/lib/gallery-url';
 import { useRegistration } from '@/lib/registration';
-const samples: GalleryPhoto[] = [
-  'galeria',
-  'galeria2',
-  'galeria3',
-  'galeria_bw',
-].map((name) => ({
-  original: '/samples/' + name + '.jpg',
-  optimized: '/samples/optimized/' + name + '.jpg',
-  thumb: '/samples/thumbs/' + name + '.webp',
-  filename: name + '.jpg',
-}));
 export default function Gallery({ day }: { day: EventDay }) {
   const router = useRouter();
   const registration = useRegistration();
@@ -27,8 +16,7 @@ export default function Gallery({ day }: { day: EventDay }) {
   const [downloadError, setDownloadError] = useState('');
   const dialog = useRef<HTMLDialogElement>(null);
   const lastTrigger = useRef<HTMLElement | null>(null);
-  const demo = galleries[day].length === 0;
-  const photos = demo ? samples : galleries[day];
+  const photos = galleries[day];
   const label = eventDays.find((item) => item.slug === day)!.label;
   useEffect(() => {
     if (registration === 'unregistered') router.replace('/');
@@ -82,32 +70,16 @@ export default function Gallery({ day }: { day: EventDay }) {
         <p className="eyebrow">Nikon Foto Image · Perú</p>
         <h1>{label}</h1>
         <p>
-          {demo
-            ? 'Las fotografías de esta jornada estarán disponibles aquí.'
-            : 'Encuentra tu retrato, previsualízalo y descarga la versión que prefieras.'}
+          Encuentra tu retrato, previsualízalo y descarga la versión que prefieras.
         </p>
-        <span>
-          {demo ? 'Fotografías próximamente' : photos.length + ' fotografías'}
-        </span>
+        <span>{photos.length + ' fotografías'}</span>
       </section>
-      {demo && (
-        <div className="sample-notice">
-          <strong>Imágenes de referencia</strong>
-          <span>
-            Estas imágenes son una muestra de la galería; no corresponden a
-            fotografías de esta jornada.
-          </span>
-        </div>
-      )}
       {downloadError && (
         <p className="form-error download-error" role="alert">
           {downloadError}
         </p>
       )}
-      <section
-        className="photo-grid"
-        aria-label={demo ? 'Imágenes de referencia' : 'Fotografías del evento'}
-      >
+      <section className="photo-grid" aria-label="Fotografías del evento">
         {photos.map((photo, index) => (
           <article className="photo-card" key={photo.filename}>
             <button
@@ -120,12 +92,7 @@ export default function Gallery({ day }: { day: EventDay }) {
             >
               <img
                 src={galleryUrl(photo.thumb)}
-                alt={
-                  (demo ? 'Imagen de referencia ' : 'Fotografía ') +
-                  (index + 1) +
-                  ' de ' +
-                  label
-                }
+                alt={'Fotografía ' + (index + 1) + ' de ' + label}
                 loading={index > 7 ? 'lazy' : 'eager'}
               />
               <span className="preview-label">
@@ -183,7 +150,7 @@ export default function Gallery({ day }: { day: EventDay }) {
               <X />
             </button>
             <div className="viewer-heading">
-              {demo ? 'Imagen de referencia' : label}
+              {label}
             </div>
             <img
               className="viewer-image"
