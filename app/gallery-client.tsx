@@ -1,8 +1,16 @@
 /* oxlint-disable nextjs/no-img-element -- Miniaturas WebP y JPG optimizados generados por el proceso de fotos. */
 'use client';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { ArrowLeft, ArrowRight, Download, Eye, X } from 'lucide-react';
+import { Download, Eye, X } from 'lucide-react';
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+  type CarouselApi,
+} from '@/components/ui/carousel';
 import { Header, Footer } from '@/components/brand';
 import { eventDays, type EventDay } from '@/lib/event';
 import { galleries, type GalleryPhoto } from './gallery-data';
@@ -12,43 +20,38 @@ export default function Gallery({ day }: { day: EventDay }) {
   const router = useRouter();
   const registration = useRegistration();
   const authorized = registration === 'registered';
-  const [selected, setSelected] = useState<number | null>(null);
+  const [open, setOpen] = useState(false);
+  const [selected, setSelected] = useState(0);
+  const [api, setApi] = useState<CarouselApi>();
   const [downloadError, setDownloadError] = useState('');
-  const dialog = useRef<HTMLDialogElement>(null);
-  const lastTrigger = useRef<HTMLElement | null>(null);
   const photos = galleries[day];
   const label = eventDays.find((item) => item.slug === day)!.label;
   useEffect(() => {
     if (registration === 'unregistered') router.replace('/');
   }, [registration, router]);
   useEffect(() => {
-    if (selected === null) return;
-    dialog.current?.showModal();
-    const previous = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
-    return () => {
-      document.body.style.overflow = previous;
+    if (open && api) api.scrollTo(selected, true);
+  }, [open, api, selected]);
+  useEffect(() => {
+    const key = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setOpen(false);
     };
-  }, [selected]);
-  function close() {
-    dialog.current?.close();
-    setSelected(null);
-    lastTrigger.current?.focus();
-  }
-  async function download(photo: GalleryPhoto, original = false) {
+    window.addEventListener('keydown', key);
+    return () => window.removeEventListener('keydown', key);
+  }, []);
+  async function download(photo: GalleryPhoto) {
     setDownloadError('');
     try {
       const response = await fetch(
-        galleryUrl(original ? photo.original : photo.optimized),
+        galleryUrl(photo.optimized),
       );
       if (!response.ok) throw new Error();
       const blob = await response.blob();
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = original
-        ? photo.filename
-        : 'nikon-fip-' + day + '-' + photo.filename.replace(/\.[^.]+$/, '.jpg');
+      a.download =
+        'nikon-fip-' + day + '-' + photo.filename.replace(/\.[^.]+$/, '.jpg');
       a.click();
       setTimeout(() => URL.revokeObjectURL(url), 1000);
     } catch {
@@ -88,8 +91,8 @@ export default function Gallery({ day }: { day: EventDay }) {
             role="button"
             onClick={(event) => {
               if (event.target instanceof HTMLButtonElement) return;
-              lastTrigger.current = event.currentTarget;
               setSelected(index);
+              setOpen(true);
             }}
             onKeyDown={(event) => {
               if (event.key === 'Enter' || event.key === ' ') {
@@ -113,8 +116,8 @@ export default function Gallery({ day }: { day: EventDay }) {
                 className="preview-button"
                 onClick={(event) => {
                   event.stopPropagation();
-                  lastTrigger.current = event.currentTarget;
                   setSelected(index);
+                  setOpen(true);
                 }}
                 aria-label={'Previsualizar fotografía ' + (index + 1)}
               >
@@ -135,79 +138,32 @@ export default function Gallery({ day }: { day: EventDay }) {
         ))}
       </section>
       <Footer />
-      <dialog
-        ref={dialog}
-        className="lightbox"
-        aria-label="Visor de fotografías"
-        onCancel={(event) => {
-          event.preventDefault();
-          close();
-        }}
-        onKeyDown={(event) => {
-          if (event.key === 'ArrowLeft') {
-            event.preventDefault();
-            setSelected((current) => Math.max(0, (current ?? 0) - 1));
-          }
-          if (event.key === 'ArrowRight') {
-            event.preventDefault();
-            setSelected((current) =>
-              Math.min(photos.length - 1, (current ?? 0) + 1),
-            );
-          }
-        }}
-      >
-        {selected !== null && (
-          <>
-            <button
-              className="lightbox-close"
-              onClick={close}
-              aria-label="Cerrar visor"
-              autoFocus
-            >
-              <X />
-            </button>
-            <div className="viewer-heading">
-              {label}
-            </div>
-            <img
-              className="viewer-image"
-              src={galleryUrl(photos[selected].optimized)}
-              alt={'Fotografía ampliada ' + (selected + 1)}
-            />
-            <div className="viewer-controls">
-              <div className="viewer-navigation">
-                <button
-                  aria-label="Fotografía anterior"
-                  disabled={selected === 0}
-                  onClick={() => setSelected(selected - 1)}
-                >
-                  <ArrowLeft />
-                </button>
-                <span>
-                  {selected + 1} / {photos.length}
-                </span>
-                <button
-                  aria-label="Fotografía siguiente"
-                  disabled={selected === photos.length - 1}
-                  onClick={() => setSelected(selected + 1)}
-                >
-                  <ArrowRight />
-                </button>
-              </div>
-              <div className="slide-downloads">
-                <button onClick={() => download(photos[selected])}>
-                  <Download size={17} /> Descargar en alta
-                </button>
-              </div>
-            </div>
-            {downloadError && (
-              <p role="alert" className="form-error">
-                {downloadError}
-              </p>
-            )}
-          </>
-        )}
-      </dialog>
+      {open && (
+        <div className="lightbox" role="dialog" aria-modal="true" aria-label="Visor de fotografías">
+          <button className="lightbox-close" onClick={() => setOpen(false)} aria-label="Cerrar visor">
+            <X />
+          </button>
+          <Carousel setApi={setApi} opts={{ startIndex: selected }} className="lightbox-carousel">
+            <CarouselContent>
+              {photos.map((photo, index) => (
+                <CarouselItem key={photo.filename + '-slide-' + index}>
+                  <div className="slide">
+                    <img src={galleryUrl(photo.optimized)} alt={'Fotografía ampliada ' + (index + 1)} />
+                    <div>
+                      <span>{index + 1} / {photos.length}</span>
+                      <div className="slide-downloads">
+                        <button onClick={() => download(photo)}><Download size={17} /> Descargar</button>
+                      </div>
+                    </div>
+                  </div>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <CarouselPrevious className="lightbox-prev" />
+            <CarouselNext className="lightbox-next" />
+          </Carousel>
+        </div>
+      )}
     </main>
   );
 }

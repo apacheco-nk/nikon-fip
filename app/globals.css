@@ -502,6 +502,30 @@ footer > span {
   flex: 1 1 auto;
   object-fit: contain;
 }
+.lightbox-prev,
+.lightbox-next {
+  position: absolute;
+  top: 50%;
+  z-index: 2;
+  width: 48px;
+  height: 48px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--line);
+  background: #fff;
+  transform: translateY(-50%);
+}
+.lightbox-prev {
+  left: 20px;
+}
+.lightbox-next {
+  right: 20px;
+}
+.lightbox-prev:disabled,
+.lightbox-next:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
 .viewer-controls {
   display: flex;
   justify-content: space-between;
@@ -683,6 +707,18 @@ footer > span {
   }
   .lightbox {
     padding: 18px 12px;
+  }
+  .lightbox-prev,
+  .lightbox-next {
+    top: auto;
+    bottom: 76px;
+    transform: none;
+  }
+  .lightbox-prev {
+    left: 16px;
+  }
+  .lightbox-next {
+    right: 16px;
   }
   .event-details {
     font-size: 13px;
