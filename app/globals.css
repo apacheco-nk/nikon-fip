@@ -402,6 +402,11 @@ footer > span {
   overflow: hidden;
   aspect-ratio: 4/3;
   background: #111;
+  cursor: pointer;
+}
+.photo-card:focus-visible {
+  outline: 3px solid var(--nikon);
+  outline-offset: -3px;
 }
 .photo-card > img {
   width: 100%;

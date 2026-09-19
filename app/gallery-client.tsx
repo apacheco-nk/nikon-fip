@@ -81,7 +81,25 @@ export default function Gallery({ day }: { day: EventDay }) {
       )}
       <section className="photo-grid" aria-label="Fotografías del evento">
         {photos.map((photo, index) => (
-          <article className="photo-card" key={photo.filename}>
+          <article
+            className="photo-card"
+            key={photo.filename}
+            tabIndex={0}
+            role="button"
+            onClick={(event) => {
+              if (event.target instanceof HTMLButtonElement) return;
+              lastTrigger.current = event.currentTarget;
+              setSelected(index);
+            }}
+            onKeyDown={(event) => {
+              if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault();
+                lastTrigger.current = event.currentTarget;
+                setSelected(index);
+              }
+            }}
+            aria-label={'Previsualizar fotografía ' + (index + 1)}
+          >
             <img
               src={galleryUrl(photo.thumb)}
               alt={'Fotografía ' + (index + 1) + ' de ' + label}
@@ -94,6 +112,7 @@ export default function Gallery({ day }: { day: EventDay }) {
               <button
                 className="preview-button"
                 onClick={(event) => {
+                  event.stopPropagation();
                   lastTrigger.current = event.currentTarget;
                   setSelected(index);
                 }}
@@ -103,7 +122,10 @@ export default function Gallery({ day }: { day: EventDay }) {
               </button>
               <button
                 className="download-trigger"
-                onClick={() => download(photo)}
+                onClick={(event) => {
+                  event.stopPropagation();
+                  download(photo);
+                }}
                 aria-label={'Descargar fotografía ' + (index + 1)}
               >
                 <Download size={18} /> <span>Descargar</span>
