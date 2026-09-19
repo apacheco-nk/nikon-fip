@@ -412,6 +412,7 @@ footer > span {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: center top;
   transition: transform 0.3s;
 }
 .photo-card:hover > img {
@@ -732,5 +733,79 @@ footer > span {
   *:before,
   *:after {
     transition: none !important;
+  }
+}
+
+/* Carousel viewer sizing and controls. */
+.lightbox {
+  overflow: hidden;
+  padding: 56px 0 24px;
+}
+.lightbox-close {
+  top: 12px;
+}
+.lightbox-carousel {
+  position: relative;
+  width: min(100%, 960px);
+  max-height: calc(100dvh - 104px);
+  margin: 0 auto;
+}
+.lightbox [data-slot='carousel-content'] {
+  width: 100%;
+  min-width: 0;
+  overflow: hidden;
+}
+.lightbox [data-slot='carousel-content'] > div {
+  display: flex !important;
+  flex-direction: row !important;
+  width: 100%;
+  min-width: 0;
+}
+.lightbox [data-slot='carousel-item'] {
+  flex: 0 0 100% !important;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+}
+.slide {
+  width: 100%;
+  max-width: 960px;
+  height: calc(100dvh - 132px);
+  max-height: calc(100dvh - 132px);
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  margin: 0 auto;
+  overflow: hidden;
+}
+.slide img {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  max-height: 72dvh;
+  min-height: 0;
+  flex: 1 1 auto;
+  object-fit: contain;
+}
+.slide > div {
+  flex: 0 0 auto;
+  padding-top: 12px;
+}
+@media (max-width: 620px) {
+  .lightbox {
+    padding: 54px 12px 72px;
+  }
+  .lightbox-carousel {
+    width: calc(100vw - 24px);
+    max-width: calc(100vw - 24px);
+    max-height: calc(100dvh - 126px);
+  }
+  .slide {
+    height: calc(100dvh - 126px);
+    max-height: calc(100dvh - 126px);
+  }
+  .slide img {
+    max-height: calc(100dvh - 190px);
   }
 }
