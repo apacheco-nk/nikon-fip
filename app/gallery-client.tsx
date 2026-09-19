@@ -97,7 +97,7 @@ export default function Gallery({ day }: { day: EventDay }) {
             onKeyDown={(event) => {
               if (event.key === 'Enter' || event.key === ' ') {
                 event.preventDefault();
-                lastTrigger.current = event.currentTarget;
+                
                 setSelected(index);
               }
             }}
