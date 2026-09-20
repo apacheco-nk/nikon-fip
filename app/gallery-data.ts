@@ -1,20 +1,6 @@
 import type { EventDay } from '@/lib/event';
 export type GalleryPhoto = { original: string; optimized: string; thumb: string; filename: string; capturedAt?: string };
-const day: EventDay = '17-septiembre';
-const photos: GalleryPhoto[] = Array.from({ length: 236 }, (_, index) => {
-  const number = index + 1;
-  const filename = 'Fotoimage 2026 17.09-' + number + '_resize.JPG';
-  const stem = 'fotoimage-2026-17-09-' + number + '_resize';
-  return {
-    original: '/gallery/' + day + '/full/' + encodeURIComponent(filename),
-    optimized: '/gallery/' + day + '/optimized/' + stem + '.jpg',
-    thumb: '/gallery/' + day + '/thumbs/' + stem + '.webp',
-    filename,
-  };
-});
-export const galleries: Record<EventDay, GalleryPhoto[]> = {
-  [day]: photos,
-  '18-septiembre': [],
-  '19-septiembre': [],
-  '20-septiembre': [],
-};
+const makePhoto = (day: string, filename: string): GalleryPhoto => { const stem = filename.replace(/\.[^.]+$/, '').toLowerCase(); return { original: '/gallery/' + day + '/full/' + encodeURIComponent(filename), optimized: '/gallery/' + day + '/optimized/' + stem + '.jpg', thumb: '/gallery/' + day + '/thumbs/' + stem + '.webp', filename }; };
+const photos17 = Array.from({ length: 236 }, (_, index) => { const number = index + 1; return makePhoto('17-septiembre', 'Fotoimage 2026 17.09-' + number + '_resize.JPG'); });
+const photos18 = ['20260918_154505583.jpg','20260918_154741076.jpg','20260918_154815878.jpg','20260918_154841925.jpg','20260918_160816419.jpg','20260918_160837226.jpg','20260918_161008373.jpg','20260918_161014715.jpg','20260918_161035243.jpg','20260918_161044526.jpg','20260918_161212498.jpg','20260918_161229177.jpg','20260918_161251006.jpg','20260918_161319951.jpg','20260918_161332551.jpg','20260918_161359300.jpg','20260918_161446805.jpg','20260918_162018429.jpg','20260918_162050247.jpg','20260918_162144171.jpg','20260918_162155487.jpg','20260918_163851442.jpg','20260918_163905272.jpg','20260918_163909443.jpg','20260918_164000465.jpg','20260918_164019815.jpg','20260918_164031606.jpg','20260918_164220317.jpg','20260918_164306563.jpg','20260918_164313478.jpg','20260918_164339434.jpg','20260918_164408222.jpg','20260918_164418789.jpg','20260918_164528972.jpg','20260918_164559616.jpg','20260918_164630249.jpg','20260918_164650844.jpg','20260918_164727344.jpg','20260918_165159121.jpg','20260918_165209439.jpg','20260918_165242718.jpg','20260918_165423351.jpg','20260918_165433432.jpg','20260918_165508350.jpg','20260918_165535496.jpg','20260918_165741613.jpg','20260918_165938315.jpg','20260918_170009073.jpg','20260918_170013405.jpg','20260918_170031826.jpg','20260918_170206097.jpg','20260918_170249062.jpg','20260918_170624047.jpg','20260918_170628013.jpg','20260918_170705259.jpg','20260918_170714793.jpg','20260918_171053861.jpg','20260918_171254060.jpg','20260918_171259717.jpg','20260918_171318511.jpg','20260918_171324212.jpg','20260918_184608417.jpg','20260918_184626318.jpg','20260918_184631924.jpg','20260918_184703930.jpg','20260918_184720313.jpg','20260918_184724098.jpg','20260918_184807414.jpg','20260918_184820891.jpg','20260918_184844821.jpg','20260918_184852834.jpg','20260918_184912473.jpg','20260918_184950147.jpg','20260918_185015156.jpg','20260918_185052399.jpg','20260918_185130991.jpg','20260918_185208410.jpg','20260918_185227847.jpg','20260918_185231719.jpg','20260918_185322316.jpg','20260918_185406684.jpg','20260918_185421248.jpg','20260918_185445290.jpg','20260918_185459244.jpg','20260918_185509691.jpg','20260918_185518306.jpg','20260918_185552087.jpg','20260918_185602120.jpg','20260918_185845581.jpg','20260918_185938241.jpg','20260918_190644249.jpg','20260918_190654251.jpg','20260918_190737132.jpg','20260918_190846680.jpg','20260918_191120901.jpg','20260918_191501951.jpg','20260918_191513051.jpg','20260918_191552853.jpg','20260918_191559307.jpg','20260918_191943388.jpg','20260918_191957182.jpg','20260918_192223709.jpg','20260918_192242503.jpg','20260918_193718294.jpg','20260918_194438691.jpg','20260918_194450055.jpg','20260918_194507237.jpg','20260918_194520833.jpg','20260918_194538960.jpg','20260918_194841038.jpg','20260918_194845907.jpg','20260918_195028111.jpg'].map((filename) => makePhoto('18-septiembre', filename));
+export const galleries: Record<EventDay, GalleryPhoto[]> = { '17-septiembre': photos17, '18-septiembre': photos18, '19-septiembre': [], '20-septiembre': [] };
