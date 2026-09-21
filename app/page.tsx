@@ -6,16 +6,16 @@ import { useRegistration, setRegistration } from '@/lib/registration';
 import { ArrowRight, Check, CalendarDays, MapPin } from 'lucide-react';
 import { Header, Footer } from '@/components/brand';
 import { eventDays } from '@/lib/event';
+import { galleryUrl } from '@/lib/gallery-url';
 import { galleries } from './gallery-data';
-import colorGalleryCover from '@/imgs/galeria.jpg';
-import colorGalleryCoverDayTwo from '@/imgs/galeria2.jpg';
-import colorGalleryCoverDayThree from '@/imgs/galeria3.jpg';
-const colorGalleryCovers = {
-  '17-septiembre': colorGalleryCover.src,
-  '18-septiembre': colorGalleryCoverDayTwo.src,
-  '19-septiembre': colorGalleryCoverDayThree.src,
-  '20-septiembre': colorGalleryCover.src,
+
+const realGalleryCovers: Record<string, string> = {
+  '17-septiembre': galleryUrl('/gallery/17-septiembre/thumbs/fotoimage-2026-17-09-110_resize.webp'),
+  '18-septiembre': galleryUrl('/gallery/18-septiembre/thumbs/20260918_163851442.webp'),
+  '19-septiembre': galleryUrl('/gallery/19-septiembre/thumbs/20260919_170147345.webp'),
+  '20-septiembre': galleryUrl('/gallery/20-septiembre/thumbs/20260920_152200515.webp'),
 };
+
 export default function Home() {
   const registered = useRegistration() === 'registered';
   const [submitting, setSubmitting] = useState(false);
@@ -224,11 +224,14 @@ export default function Home() {
           <div className="day-grid">
             {eventDays.map((day) => {
               const hasPhotos = galleries[day.slug].length > 0;
+              const coverImage = hasPhotos
+                ? realGalleryCovers[day.slug] ?? galleryUrl(galleries[day.slug][0].thumb)
+                : undefined;
               const content = (
                 <>
                   <div className="day-image">
                     <img
-                      src={colorGalleryCovers[day.slug]}
+                      src={coverImage}
                       alt=""
                     />
                     <span className="photo-count">
