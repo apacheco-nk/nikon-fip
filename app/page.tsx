@@ -7,10 +7,15 @@ import { ArrowRight, Check, CalendarDays, MapPin } from 'lucide-react';
 import { Header, Footer } from '@/components/brand';
 import { eventDays } from '@/lib/event';
 import { galleries } from './gallery-data';
-import { galleryUrl } from '@/lib/gallery-url';
 import colorGalleryCover from '@/imgs/galeria.jpg';
 import colorGalleryCoverDayTwo from '@/imgs/galeria2.jpg';
 import colorGalleryCoverDayThree from '@/imgs/galeria3.jpg';
+const colorGalleryCovers = {
+  '17-septiembre': colorGalleryCover.src,
+  '18-septiembre': colorGalleryCoverDayTwo.src,
+  '19-septiembre': colorGalleryCoverDayThree.src,
+  '20-septiembre': colorGalleryCover.src,
+};
 export default function Home() {
   const registered = useRegistration() === 'registered';
   const [submitting, setSubmitting] = useState(false);
@@ -223,17 +228,7 @@ export default function Home() {
                 <>
                   <div className="day-image">
                     <img
-                      src={
-                        day.slug === '17-septiembre'
-                          ? colorGalleryCover.src
-                          : day.slug === '18-septiembre'
-                            ? colorGalleryCoverDayTwo.src
-                            : day.slug === '19-septiembre'
-                              ? colorGalleryCoverDayThree.src
-                              : day.slug === '20-septiembre'
-                                ? colorGalleryCover.src
-                                : galleryUrl(day.cover)
-                      }
+                      src={colorGalleryCovers[day.slug]}
                       alt=""
                     />
                     <span className="photo-count">
