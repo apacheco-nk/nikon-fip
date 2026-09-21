@@ -210,7 +210,7 @@ export default function Home() {
         </div>
       </section>
       {registered && (
-        <section id="galerias" className="gallery-picker">
+        <section id="galerias" className="gallery-picker" data-gallery-release="all-days">
           <div className="section-heading">
             <p className="eyebrow">Galerías del evento</p>
             <h2>Elige tu jornada</h2>
