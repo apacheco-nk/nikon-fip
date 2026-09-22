@@ -10,10 +10,18 @@ import { galleryUrl } from '@/lib/gallery-url';
 import { galleries } from './gallery-data';
 
 const realGalleryCovers: Record<string, string> = {
-  '17-septiembre': galleryUrl('/gallery/17-septiembre/thumbs/fotoimage-2026-17-09-110_resize.webp'),
-  '18-septiembre': galleryUrl('/gallery/18-septiembre/thumbs/20260918_163851442.webp'),
-  '19-septiembre': galleryUrl('/gallery/19-septiembre/thumbs/20260919_170147345.webp'),
-  '20-septiembre': galleryUrl('/gallery/20-septiembre/thumbs/20260920_152200515.webp'),
+  '17-septiembre': galleryUrl(
+    '/gallery/17-septiembre/optimized/fotoimage-2026-17-09-110_resize.jpg',
+  ),
+  '18-septiembre': galleryUrl(
+    '/gallery/18-septiembre/optimized/20260918_163851442.jpg',
+  ),
+  '19-septiembre': galleryUrl(
+    '/gallery/19-septiembre/optimized/20260919_170147345.jpg',
+  ),
+  '20-septiembre': galleryUrl(
+    '/gallery/20-septiembre/optimized/20260920_152200515.jpg',
+  ),
 };
 
 export default function Home() {
