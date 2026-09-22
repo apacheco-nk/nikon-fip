@@ -6,23 +6,7 @@ import { useRegistration, setRegistration } from '@/lib/registration';
 import { ArrowRight, Check, CalendarDays, MapPin } from 'lucide-react';
 import { Header, Footer } from '@/components/brand';
 import { eventDays } from '@/lib/event';
-import { galleryUrl } from '@/lib/gallery-url';
 import { galleries } from './gallery-data';
-
-const realGalleryCovers: Record<string, string> = {
-  '17-septiembre': galleryUrl(
-    '/gallery/17-septiembre/optimized/fotoimage-2026-17-09-110_resize.jpg',
-  ),
-  '18-septiembre': galleryUrl(
-    '/gallery/18-septiembre/optimized/20260918_163851442.jpg',
-  ),
-  '19-septiembre': galleryUrl(
-    '/gallery/19-septiembre/optimized/20260919_170147345.jpg',
-  ),
-  '20-septiembre': galleryUrl(
-    '/gallery/20-septiembre/optimized/20260920_152200515.jpg',
-  ),
-};
 
 export default function Home() {
   const registered = useRegistration() === 'registered';
@@ -232,16 +216,10 @@ export default function Home() {
           <div className="day-grid">
             {eventDays.map((day) => {
               const hasPhotos = galleries[day.slug].length > 0;
-              const coverImage = hasPhotos
-                ? realGalleryCovers[day.slug] ?? galleryUrl(galleries[day.slug][0].thumb)
-                : undefined;
               const content = (
                 <>
                   <div className="day-image">
-                    <img
-                      src={coverImage}
-                      alt=""
-                    />
+                    <img src={day.cover} alt="" />
                     <span className="photo-count">
                       {hasPhotos
                         ? galleries[day.slug].length + ' fotos'
